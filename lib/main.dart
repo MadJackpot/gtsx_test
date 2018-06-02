@@ -45,7 +45,7 @@ class PresentationListState extends State<PresentationList> {
   @override
   Widget build(BuildContext context) {
     return new ListView.builder(
-      itemCount: _presentations.length + uniqueDays(_presentations),
+      itemCount: _presentations.length,
       itemBuilder: (context, index) {
         if (index == 0 || _presentations[index-1].presentationTime.day != _presentations[index].presentationTime.day) {
             return new Container(
@@ -71,11 +71,4 @@ class PresentationListState extends State<PresentationList> {
       },
     );
   }
-}
-
-int uniqueDays(List<Presentation> presentations) {
-  Set<Day> days;
-  for (var presentation in presentations)
-    days.add(presentation.presentationTime.day);
-  return days.length;
 }
