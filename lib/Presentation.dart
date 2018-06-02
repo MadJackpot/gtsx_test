@@ -2,52 +2,64 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:english_words/english_words.dart';
 import './PresentationPage.dart';
+import 'PresentationTime.dart';
 
 class Presentation
 {
   String _title;
-  final String _startTime;
-  final String _endTime;
+  final PresentationTime presentationTime = PresentationTime.Random();
+  final String _icon;
 
-  Presentation(this._title, this._startTime, this._endTime);
+  double _animatedHeight = 100.0;
+
+  bool OverlappingTime(Presentation p) => p.presentationTime.startHour == presentationTime.startHour && p.presentationTime.day == presentationTime.day;
+
+  Presentation(this._title)
+      : _icon = getRandomIcon();
+
   Presentation.demo()
-  : _title = "Title"
-    , _startTime = "11:00"
-    , _endTime = "12:00";
+    : _title = "Title";
 
-  Card createCard(BuildContext context, Function func) {
-    return new Card(
-      child: new Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          new ListTile(
-            leading: Image.asset(getRandomIcon()),
-            title: new Text(generateRandomTitle()),
-            subtitle: new Container(
-              decoration: BoxDecoration(
-                color: Color(0xFFFFDDDD),
-                borderRadius: BorderRadius.circular(4.0),
+  void ToggleCard() => _animatedHeight == 0.0 ? _animatedHeight = 100.0 : _animatedHeight = 0.0;
+
+  AnimatedContainer createCard(BuildContext context, Function func) {
+    return AnimatedContainer(
+      child: new Card(
+        child: new Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            new ListTile(
+              leading: Image.asset(_icon),
+              title: new Text(_title),
+              subtitle: new Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFFFFDDDD),
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+                child: new Text("${presentationTime.StartTime()} - ${presentationTime.EndTime()}")
               ),
-              child: new Text("$_startTime - $_endTime")
+              onTap: () { Navigator.push(context, new MaterialPageRoute(builder: (context) => PresentationPage(_title)));},
+              trailing: new RaisedButton(
+                elevation: 3.0,
+                color: Color(0xFFFFDDDD),
+                child: Text("Add"),
+                onPressed: (){ func(); },
+              ),
             ),
-            onTap: () { Navigator.push(context, new MaterialPageRoute(builder: (context) => PresentationPage(_title, _startTime, _endTime)));},
-            trailing: new RaisedButton(
-              elevation: 3.0,
-              color: Color(0xFFFFDDDD),
-              child: Text("Add"),
-              onPressed: (){  },
-            ),
-          ),
-          new ButtonTheme.bar(
-            child: new ButtonBar(
-              children: <Widget>[
+            new ButtonTheme.bar(
+              child: new ButtonBar(
+                children: <Widget>[
 
-              ]
+                ]
+              )
             )
-          )
-        ]
+          ]
+        ),
+        elevation: 8.0,
       ),
-      elevation: 10.0,
+      height: _animatedHeight,
+      width: 100.0,
+      duration: const Duration(milliseconds: 120),
     );
   }
 }

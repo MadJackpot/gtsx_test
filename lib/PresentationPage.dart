@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-
+import 'PresentationTime.dart';
 
 class PresentationPage extends StatelessWidget {
+  final PresentationTime _presentationTime = PresentationTime.Random();
   final String _title;
-  final String _startTime;
-  final String _endTime;
 
-  PresentationPage(this._title, this._startTime, this._endTime);
+  PresentationPage(this._title);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +16,7 @@ class PresentationPage extends StatelessWidget {
       ),
       body: new Center(
         child: new Text(
-          "$_startTime - $_endTime",
+          "${_presentationTime.startHour} - ${_presentationTime.endHour}",
           style: new TextStyle(
             fontSize: 20.0,
           )
